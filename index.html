@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amateur Box</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0f172a;
+  color: white;
+  font-family: Arial;
+}
+
+header {
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img, .card video {
+  width: 100%;
+}
+
+.card-content {
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>📦 Amateur Box</header>
+
+<div class="grid" id="grid"></div>
+
+<script>
+async function loadPosts() {
+  const res = await fetch("https://ton-backend.onrender.com/posts");
+  const posts = await res.json();
+
+  const grid = document.getElementById("grid");
+
+  posts.forEach(post => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    let media = "";
+
+    if (post.photo) {
+      media = `<img src="https://api.telegram.org/file/botTON_TOKEN/${post.photo}">`;
+    }
+
+    if (post.video) {
+      media = `<video controls src="https://api.telegram.org/file/botTON_TOKEN/${post.video}"></video>`;
+    }
+
+    card.innerHTML = `
+      ${media}
+      <div class="card-content">
+        <p>${post.text || "📖 Manga"}</p>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>
